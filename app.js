@@ -266,8 +266,6 @@ const onClickCompare= () => {
         img.className = 'img_container'
         picContainer.append(img)
 
-        console.log(item)
-
         if (item.species) {
             li1.innerText = item.species
             li2.innerText = item.fact
