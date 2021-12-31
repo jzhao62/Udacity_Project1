@@ -21,22 +21,28 @@
     </header>
     <!-- Form to get user input -->
     <form id="dino-compare">
-        <div class="form-container">
+        <div class="form-container" id='input_form'>
             <p>Name:</p>
-            <input id="name" class="form-field__full" type="name" name="name">
+            <input id="name" class="form-field__full" type="name" name="name" >
             <p>Height</p>
-            <label>Feet: <input id="feet" class="form-field__short" type="number" name="feet"></label>
-            <label>inches: <input id="inches" class="form-field__short" type="number" name="inches"></label>
+            <label>Feet: <input id="feet" class="form-field__short" type="number" name="feet" ></label>
+            <label>inches: <input id="inches" class="form-field__short" type="number" name="inches" ></label>
             <p>Weight:</p>
-            <label><input id="weight" class="form-field__full" type="number" name="weight">lbs</label>
+            <label><input id="weight" class="form-field__full" type="number" name="weight" >lbs</label>
             <p>Diet:</p>
-            <select id="diet" class="form-field__full" name="diet">
+            <select id="diet" class="form-field__full" name="diet" >
                 <option>Herbavor</option>
                 <option>Omnivor</option>
                 <option>Carnivor</option>
             </select>
-            <div id="btn">Compare Me!</div>
+            <div id="btn" onclick="onClickCompare()">Compare Me!</div>
         </div>
+
+
+        <div id="dino_grid"  class="dino_grid_container"></div>
+        <div id="weight_comparison_table" class ='table_container' ></div>
+
+
     </form>
     <!-- .grid to attach tiles to -->
     <main id="grid"></main>
