@@ -1,5 +1,4 @@
 
-
 const dino = [
         {
             "species": "Triceratops",
@@ -100,7 +99,9 @@ class Human {
     }
 }
 
-
+function Bird() {
+    this.canFly = 'yes';
+}
 
 class Dinasour {
     species = ''
@@ -111,7 +112,6 @@ class Dinasour {
     when = ''
     fact = ''
     img = ""
-
     constructor(species, weight, height, diet, where, when, fact, img) {
         this.species = species
         this.weight = weight
@@ -121,144 +121,71 @@ class Dinasour {
         this.when = when
         this.fact = fact
         this.img = img;
-
+    }
+    compareHeight = (human) => {
+        const convertToFt = (feet, inch) => {
+            return parseFloat(feet + inch/12)
+        }
+        return `${this.species} is taller than human for ${this.height - convertToFt(human.feet, human.inches)} feet`
+    }
+    // used to generate a comparision between weight fact
+    compareWeight = (human) => {
+        return `${this.species} is heavier than human for  ${this.weight-human.lb} lb`
     }
 
+    // used to generate a comparision between dit
+    compareDiet = (human) => {
+        return `${this.species} is ${this.diet} while human is ${human.diet}`
+    }
 }
 
-const convertToFt = (feet, inch) => {
-    return parseFloat(feet + inch/12)
+
+// shuffle to display fact or comparison facts everytimes the page was loaded
+const shuffleFactToDisplay = (dino, human) => {
+    const comparingFact = [dino.compareHeight(human), dino.compareWeight(human), dino.compareDiet(human), dino.fact, dino.when]
+    return comparingFact[Math.floor(Math.random() * comparingFact.length)]
 }
-
-const compareWeightTable = (output) => {
-    const tableContainer = document.getElementById('weight_comparison_table')
-    const tableRef= document.createElement('table')
-    tableRef.className = "table_wrapper"
-
-
-    const TableHeader = tableRef.insertRow(tableRef.rows.length);
-    TableHeader.innerHTML = "<tr>\n" +
-        "    <th>Dinasour Name</th>\n" +
-        "    <th>Dinasour Weight(lb)</th>\n" +
-        "    <th>Human Name</th>\n" +
-        "    <th>Human weight(lb)</th>\n" +
-        "    <th>Dinasour Weight - Human Weight(lb)</th>\n" +
-        "  </tr>"
-
-    const human = output[4]
-
-    output.forEach((item) => {
-        if (!Human.prototype.isPrototypeOf(item)){
-            const row = tableRef.insertRow(tableRef.rows.length);
-            row.innerHTML = "<tr>\n" +
-                `   <th>${item.species}</th>\n` +
-                `    <th>${item.weight}</th>\n` +
-                `    <th>${human.name}</th>\n` +
-                `    <th>${human.lb}</th>\n` +
-                `    <th>${item.weight - human.lb}</th>\n` +
-                "  </tr>"
-        }
-
-    })
-    tableContainer.append(tableRef)
-}
-
-const compareHeightTable = (output)=> {
-    const tableContainer = document.getElementById('weight_comparison_table')
-    const tableRef= document.createElement('table')
-    tableRef.className = "table_wrapper"
-
-    const TableHeader = tableRef.insertRow(tableRef.rows.length);
-    TableHeader.innerHTML = "<tr>\n" +
-        "    <th>Dinasour Name</th>\n" +
-        "    <th>Dinasour Height(ft)</th>\n" +
-        "    <th>Human Name</th>\n" +
-        "    <th>Human Height(ft)</th>\n" +
-        "    <th>Height Difference(ft)</th>\n" +
-        "  </tr>"
-
-
-
-    const human = output[4]
-
-    const humanHeight = convertToFt(human.feet, human.inches)
-
-
-
-    output.forEach((item) => {
-        if (!Human.prototype.isPrototypeOf(item)){
-            const row = tableRef.insertRow(tableRef.rows.length);
-            row.innerHTML = "<tr>\n" +
-                `   <th>${item.species}</th>\n` +
-                `    <th>${item.height}</th>\n` +
-                `    <th>${human.name}</th>\n` +
-                `    <th>${humanHeight}</th>\n` +
-                `    <th>${item.height-humanHeight}</th>\n` +
-                "  </tr>"
-        }
-
-    })
-    tableContainer.append(tableRef)
-}
-
-const compareDietTable = (output)=> {
-    const tableContainer = document.getElementById('weight_comparison_table')
-    const tableRef= document.createElement('table')
-    tableRef.className = "table_wrapper"
-
-    const TableHeader = tableRef.insertRow(tableRef.rows.length);
-    TableHeader.innerHTML = "<tr>\n" +
-        "    <th>Dinasour Name</th>\n" +
-        "    <th>Dinasour Diet</th>\n" +
-        "    <th>Human Name</th>\n" +
-        "    <th>Human Diet</th>\n" +
-        "  </tr>"
-
-    const human = output[4]
-    output.forEach((item) => {
-        if (!Human.prototype.isPrototypeOf(item)){
-            const row = tableRef.insertRow(tableRef.rows.length);
-            row.innerHTML = "<tr>\n" +
-                `   <th>${item.species}</th>\n` +
-                `    <th>${item.diet}</th>\n` +
-                `    <th>${human.name}</th>\n` +
-                `    <th>${human.diet}</th>\n` +
-                "  </tr>"
-        }
-    })
-    tableContainer.append(tableRef)
-}
-
 
 
 const onClickCompare= () => {
     document.getElementById('input_form').style.display = 'none';
     document.getElementById('dino_grid').className = 'dino_grid_container_visible'
-    document.getElementById('weight_comparison_table').className = 'table_container_visible'
 
-
+    // collect input data and build human obj
     const name = document.getElementById("name").value;
     const feet = document.getElementById('feet').value;
     const inches = document.getElementById('inches').value;
     const weight = document.getElementById('weight').value;
     const diet = document.getElementById('diet').value;
-    const human = new Human(name, feet, inches, weight, diet)
+    const currentHuman = new Human(name, feet, inches, weight, diet)
+
+
+    // generate dino objects and put human in index4, and display cards in a flex layout
     let totalOutputs = []
     dino.forEach((el, idx) => {
         const currDino = new Dinasour(el.species, el.weight, el.height, el.diet, el.where, el.when, el.fact, el.img)
+        if (currDino.species.toLowerCase() === 'pigeon'){
+
+            // if pigion, set its prototype to bird, instead of default dinasour
+            Object.setPrototypeOf(currDino, new Bird())
+        }
         totalOutputs.push(currDino)
     })
-    totalOutputs.push(human)
+    totalOutputs.push(currentHuman)
 
     const tmp = totalOutputs[4]
     totalOutputs[4] = totalOutputs[8]
     totalOutputs[8] = tmp;
 
 
+
+    // prepare the grids container
     dino_grid = document.getElementById('dino_grid');
 
+
+    // prepare html skeletons and put in facts
     totalOutputs.forEach((item)=>{
-        let div = document.createElement('div')
+        let dino_card_container = document.createElement('div')
         let li1 = document.createElement("li");
         let li2 = document.createElement("li")
         let picContainer = document.createElement('div');
@@ -266,61 +193,31 @@ const onClickCompare= () => {
         img.className = 'img_container'
         picContainer.append(img)
 
-        if (item.species) {
-            li1.innerText = item.species
-            li2.innerText = item.fact
-            img.src = item.img
-
-        }
-
-        if (item.name) {
+        // if the prototype is human
+        if (Human.prototype.isPrototypeOf(item)) {
             li1.innerText = item.name
-            li2.innerText = 'This is a human'
+            li2.innerText = 'there is no fact to be displayed'
             img.src = "images/human.png"
         }
 
-        div.append(li1)
-        div.append(picContainer)
-        div.append(li2)
+        // if prototype is bird
+        if(Bird.prototype.isPrototypeOf(item)) {
+            li1.innerText = item.species
+            li2.innerText = item.fact
+            img.src = item.img
+        }
+        // if the item is dino
+        if(Dinasour.prototype.isPrototypeOf(item)) {
+            li1.innerText = item.species
+            li2.innerText = shuffleFactToDisplay(item, currentHuman)
+            img.src = item.img
+        }
 
-        div.className = 'dino_card_container'
-        dino_grid.appendChild(div);
+        dino_card_container.append(li1)
+        dino_card_container.append(picContainer)
+        dino_card_container.append(li2)
+
+        dino_card_container.className = 'dino_card_container'
+        dino_grid.appendChild(dino_card_container);
     })
-
-
-    compareWeightTable(totalOutputs)
-    compareHeightTable(totalOutputs)
-    compareDietTable(totalOutputs)
-
-
-
 }
-
-
-
-
-
-
-    // Use IIFE to get human data from form
-
-
-    // Create Dino Compare Method 1
-    // NOTE: Weight in JSON file is in lbs, height in inches. 
-
-    
-    // Create Dino Compare Method 2
-    // NOTE: Weight in JSON file is in lbs, height in inches.
-
-    
-    // Create Dino Compare Method 3
-    // NOTE: Weight in JSON file is in lbs, height in inches.
-
-
-    // Generate Tiles for each Dino in Array
-  
-        // Add tiles to DOM
-
-    // Remove form from screen
-
-
-// On button click, prepare and display infographic
