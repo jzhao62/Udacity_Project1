@@ -124,7 +124,7 @@ class Dinasour {
     }
     compareHeight = (human) => {
         const convertToFt = (feet, inch) => {
-            return parseFloat(feet + inch/12)
+            return parseFloat(feet) + parseFloat(inch)/12
         }
         return `${this.species} is taller than human for ${this.height - convertToFt(human.feet, human.inches)} feet`
     }
